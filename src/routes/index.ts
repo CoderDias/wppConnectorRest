@@ -30,7 +30,7 @@ import * as NewsletterController from '../controller/newsletterController';
 import * as OrderController from '../controller/orderController';
 import * as SessionController from '../controller/sessionController';
 import * as StatusController from '../controller/statusController';
-import //verifyToken from '../middleware/auth';
+import verifyToken from '../middleware/auth';
 import * as HealthCheck from '../middleware/healthCheck';
 import * as prometheusRegister from '../middleware/instrumentation';
 import statusConnection from '../middleware/statusConnection';
@@ -40,896 +40,896 @@ const upload = multer(uploadConfig as any);
 const routes: Router = Router();
 
 // Generate Token
-routes.post('/:secretkey/generate-token', encryptSession);
+routes.post('/api/:session/:secretkey/generate-token', encryptSession);
 
 // All Sessions
 routes.get(
-  '/show-all-sessions',
+  '/api/:secretkey/show-all-sessions',
   SessionController.showAllSessions
 );
-routes.post('/start-all', SessionController.startAllSessions);
+routes.post('/api/:secretkey/start-all', SessionController.startAllSessions);
 
 // Sessions
 routes.get(
-  '/check-connection-session',
-  //verifyToken,
+  '/api/:session/check-connection-session',
+  verifyToken,
   SessionController.checkConnectionSession
 );
 routes.get(
-  '/get-media-by-message/:messageId',
-  //verifyToken,
+  '/api/:session/get-media-by-message/:messageId',
+  verifyToken,
   SessionController.getMediaByMessage
 );
 routes.get(
-  '/get-platform-from-message/:messageId',
-  //verifyToken,
+  '/api/:session/get-platform-from-message/:messageId',
+  verifyToken,
   DeviceController.getPlatformFromMessage
 );
 routes.get(
-  '/qrcode-session',
-  //verifyToken,
+  '/api/:session/getQrCode',
+  verifyToken,
   SessionController.getQrCode
 );
 routes.post(
-  '/start-session',
-  //verifyToken,
+  '/api/:session/start',
+  verifyToken,
   SessionController.startSession
 );
 routes.post(
-  '/logout-session',
-  //verifyToken,
+  '/api/:session/logout',
+  verifyToken,
   statusConnection,
   SessionController.logOutSession
 );
 routes.post(
-  '/:secretkey/clear-session-data',
+  '/api/:session/:secretkey/clear-session-data',
   MiscController.clearSessionData
 );
 routes.post(
-  '/close-session',
-  //verifyToken,
+  '/api/:session/close',
+  verifyToken,
   SessionController.closeSession
 );
 routes.post(
-  '/subscribe-presence',
-  //verifyToken,
+  '/api/:session/subscribe-presence',
+  verifyToken,
   SessionController.subscribePresence
 );
 routes.post(
-  '/download-media',
-  //verifyToken,
+  '/api/:session/download-media',
+  verifyToken,
   statusConnection,
   SessionController.downloadMediaByMessage
 );
 
 // Messages
 routes.post(
-  '/sendText',
-  //verifyToken,
+  '/api/:session/sendText',
+  verifyToken,
   statusConnection,
   MessageController.sendMessage
 );
 routes.post(
-  '/edit-message',
-  //verifyToken,
+  '/api/:session/edit-message',
+  verifyToken,
   statusConnection,
   MessageController.editMessage
 );
 routes.post(
-  '/send-image',
+  '/api/:session/send-image',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
-  '/send-sticker',
+  '/api/:session/send-sticker',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   MessageController.sendImageAsSticker
 );
 routes.post(
-  '/send-sticker-gif',
+  '/api/:session/send-sticker-gif',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   MessageController.sendImageAsStickerGif
 );
 routes.post(
-  '/send-reply',
-  //verifyToken,
+  '/api/:session/send-reply',
+  verifyToken,
   statusConnection,
   MessageController.replyMessage
 );
 routes.post(
-  '/send-file',
+  '/api/:session/send-file',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
-  '/send-file-base64',
-  //verifyToken,
+  '/api/:session/send-file-base64',
+  verifyToken,
   statusConnection,
   MessageController.sendFile
 );
 routes.post(
-  '/send-voice',
-  //verifyToken,
+  '/api/:session/send-voice',
+  verifyToken,
   statusConnection,
   MessageController.sendVoice
 );
 routes.post(
-  '/send-voice-base64',
-  //verifyToken,
+  '/api/:session/send-voice-base64',
+  verifyToken,
   statusConnection,
   MessageController.sendVoice64
 );
 routes.get(
-  '/status-session',
-  //verifyToken,
+  '/api/:session/status-session',
+  verifyToken,
   SessionController.getSessionState
 );
 routes.post(
-  '/send-status',
-  //verifyToken,
+  '/api/:session/send-status',
+  verifyToken,
   statusConnection,
   MessageController.sendStatusText
 );
 routes.post(
-  '/send-link-preview',
-  //verifyToken,
+  '/api/:session/send-link-preview',
+  verifyToken,
   statusConnection,
   MessageController.sendLinkPreview
 );
 routes.post(
-  '/send-location',
-  //verifyToken,
+  '/api/:session/send-location',
+  verifyToken,
   statusConnection,
   MessageController.sendLocation
 );
 routes.post(
-  '/send-mentioned',
-  //verifyToken,
+  '/api/:session/send-mentioned',
+  verifyToken,
   statusConnection,
   MessageController.sendMentioned
 );
 routes.post(
-  '/send-buttons',
-  //verifyToken,
+  '/api/:session/send-buttons',
+  verifyToken,
   statusConnection,
   MessageController.sendButtons
 );
 routes.post(
-  '/send-list-message',
-  //verifyToken,
+  '/api/:session/send-list-message',
+  verifyToken,
   statusConnection,
   MessageController.sendListMessage
 );
 routes.post(
-  '/send-order-message',
-  //verifyToken,
+  '/api/:session/send-order-message',
+  verifyToken,
   statusConnection,
   MessageController.sendOrderMessage
 );
 routes.post(
-  '/send-poll-message',
-  //verifyToken,
+  '/api/:session/send-poll-message',
+  verifyToken,
   statusConnection,
   MessageController.sendPollMessage
 );
 
 // Group
 routes.get(
-  '/all-broadcast-list',
-  //verifyToken,
+  '/api/:session/all-broadcast-list',
+  verifyToken,
   statusConnection,
   GroupController.getAllBroadcastList
 );
 routes.get(
-  '/all-groups',
-  //verifyToken,
+  '/api/:session/all-groups',
+  verifyToken,
   statusConnection,
   GroupController.getAllGroups
 );
 routes.get(
-  '/group-members/:groupId',
-  //verifyToken,
+  '/api/:session/group-members/:groupId',
+  verifyToken,
   statusConnection,
   GroupController.getGroupMembers
 );
 routes.get(
-  '/common-groups/:wid',
-  //verifyToken,
+  '/api/:session/common-groups/:wid',
+  verifyToken,
   statusConnection,
   GroupController.getCommonGroups
 );
 routes.get(
-  '/group-admins/:groupId',
-  //verifyToken,
+  '/api/:session/group-admins/:groupId',
+  verifyToken,
   statusConnection,
   GroupController.getGroupAdmins
 );
 routes.get(
-  '/group-invite-link/:groupId',
-  //verifyToken,
+  '/api/:session/group-invite-link/:groupId',
+  verifyToken,
   statusConnection,
   GroupController.getGroupInviteLink
 );
 routes.get(
-  '/group-revoke-link/:groupId',
-  //verifyToken,
+  '/api/:session/group-revoke-link/:groupId',
+  verifyToken,
   statusConnection,
   GroupController.revokeGroupInviteLink
 );
 routes.get(
-  '/group-members-ids/:groupId',
-  //verifyToken,
+  '/api/:session/group-members-ids/:groupId',
+  verifyToken,
   statusConnection,
   GroupController.getGroupMembersIds
 );
 routes.post(
-  '/create-group',
-  //verifyToken,
+  '/api/:session/create-group',
+  verifyToken,
   statusConnection,
   GroupController.createGroup
 );
 routes.post(
-  '/leave-group',
-  //verifyToken,
+  '/api/:session/leave-group',
+  verifyToken,
   statusConnection,
   GroupController.leaveGroup
 );
 routes.post(
-  '/join-code',
-  //verifyToken,
+  '/api/:session/join-code',
+  verifyToken,
   statusConnection,
   GroupController.joinGroupByCode
 );
 routes.post(
-  '/add-participant-group',
-  //verifyToken,
+  '/api/:session/add-participant-group',
+  verifyToken,
   statusConnection,
   GroupController.addParticipant
 );
 routes.post(
-  '/remove-participant-group',
-  //verifyToken,
+  '/api/:session/remove-participant-group',
+  verifyToken,
   statusConnection,
   GroupController.removeParticipant
 );
 routes.post(
-  '/promote-participant-group',
-  //verifyToken,
+  '/api/:session/promote-participant-group',
+  verifyToken,
   statusConnection,
   GroupController.promoteParticipant
 );
 routes.post(
-  '/demote-participant-group',
-  //verifyToken,
+  '/api/:session/demote-participant-group',
+  verifyToken,
   statusConnection,
   GroupController.demoteParticipant
 );
 routes.post(
-  '/group-info-from-invite-link',
-  //verifyToken,
+  '/api/:session/group-info-from-invite-link',
+  verifyToken,
   statusConnection,
   GroupController.getGroupInfoFromInviteLink
 );
 routes.post(
-  '/group-description',
-  //verifyToken,
+  '/api/:session/group-description',
+  verifyToken,
   statusConnection,
   GroupController.setGroupDescription
 );
 routes.post(
-  '/group-property',
-  //verifyToken,
+  '/api/:session/group-property',
+  verifyToken,
   statusConnection,
   GroupController.setGroupProperty
 );
 routes.post(
-  '/group-subject',
-  //verifyToken,
+  '/api/:session/group-subject',
+  verifyToken,
   statusConnection,
   GroupController.setGroupSubject
 );
 routes.post(
-  '/messages-admins-only',
-  //verifyToken,
+  '/api/:session/messages-admins-only',
+  verifyToken,
   statusConnection,
   GroupController.setMessagesAdminsOnly
 );
 routes.post(
-  '/group-pic',
+  '/api/:session/group-pic',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   GroupController.setGroupProfilePic
 );
 routes.post(
-  '/change-privacy-group',
-  //verifyToken,
+  '/api/:session/change-privacy-group',
+  verifyToken,
   statusConnection,
   GroupController.changePrivacyGroup
 );
 
 // Chat
 routes.get(
-  '/all-chats',
-  //verifyToken,
+  '/api/:session/all-chats',
+  verifyToken,
   statusConnection,
   DeviceController.getAllChats
 );
 routes.post(
-  '/list-chats',
-  //verifyToken,
+  '/api/:session/list-chats',
+  verifyToken,
   statusConnection,
   DeviceController.listChats
 );
 
 routes.get(
-  '/all-chats-archived',
-  //verifyToken,
+  '/api/:session/all-chats-archived',
+  verifyToken,
   statusConnection,
   DeviceController.getAllChatsArchiveds
 );
 routes.get(
-  '/all-chats-with-messages',
-  //verifyToken,
+  '/api/:session/all-chats-with-messages',
+  verifyToken,
   statusConnection,
   DeviceController.getAllChatsWithMessages
 );
 routes.get(
-  '/all-messages-in-chat/:phone',
-  //verifyToken,
+  '/api/:session/all-messages-in-chat/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getAllMessagesInChat
 );
 routes.get(
-  '/all-new-messages',
-  //verifyToken,
+  '/api/:session/all-new-messages',
+  verifyToken,
   statusConnection,
   DeviceController.getAllNewMessages
 );
 routes.get(
-  '/unread-messages',
-  //verifyToken,
+  '/api/:session/unread-messages',
+  verifyToken,
   statusConnection,
   DeviceController.getUnreadMessages
 );
 routes.get(
-  '/all-unread-messages',
-  //verifyToken,
+  '/api/:session/all-unread-messages',
+  verifyToken,
   statusConnection,
   DeviceController.getAllUnreadMessages
 );
 routes.get(
-  '/chat-by-id/:phone',
-  //verifyToken,
+  '/api/:session/chat-by-id/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getChatById
 );
 routes.get(
-  '/message-by-id/:messageId',
-  //verifyToken,
+  '/api/:session/message-by-id/:messageId',
+  verifyToken,
   statusConnection,
   DeviceController.getMessageById
 );
 routes.get(
-  '/chat-is-online/:phone',
-  //verifyToken,
+  '/api/:session/chat-is-online/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getChatIsOnline
 );
 routes.get(
-  '/last-seen/:phone',
-  //verifyToken,
+  '/api/:session/last-seen/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getLastSeen
 );
 routes.get(
-  '/list-mutes/:type',
-  //verifyToken,
+  '/api/:session/list-mutes/:type',
+  verifyToken,
   statusConnection,
   DeviceController.getListMutes
 );
 routes.get(
-  '/load-messages-in-chat/:phone',
-  //verifyToken,
+  '/api/:session/load-messages-in-chat/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.loadAndGetAllMessagesInChat
 );
 routes.get(
-  '/get-messages/:phone',
-  //verifyToken,
+  '/api/:session/get-messages/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getMessages
 );
 
 routes.post(
-  '/archive-chat',
-  //verifyToken,
+  '/api/:session/archive-chat',
+  verifyToken,
   statusConnection,
   DeviceController.archiveChat
 );
 routes.post(
-  '/archive-all-chats',
-  //verifyToken,
+  '/api/:session/archive-all-chats',
+  verifyToken,
   statusConnection,
   DeviceController.archiveAllChats
 );
 routes.post(
-  '/clear-chat',
-  //verifyToken,
+  '/api/:session/clear-chat',
+  verifyToken,
   statusConnection,
   DeviceController.clearChat
 );
 routes.post(
-  '/clear-all-chats',
-  //verifyToken,
+  '/api/:session/clear-all-chats',
+  verifyToken,
   statusConnection,
   DeviceController.clearAllChats
 );
 routes.post(
-  '/delete-chat',
-  //verifyToken,
+  '/api/:session/delete-chat',
+  verifyToken,
   statusConnection,
   DeviceController.deleteChat
 );
 routes.post(
-  '/delete-all-chats',
-  //verifyToken,
+  '/api/:session/delete-all-chats',
+  verifyToken,
   statusConnection,
   DeviceController.deleteAllChats
 );
 routes.post(
-  '/delete-message',
-  //verifyToken,
+  '/api/:session/delete-message',
+  verifyToken,
   statusConnection,
   DeviceController.deleteMessage
 );
 routes.post(
-  '/react-message',
-  //verifyToken,
+  '/api/:session/react-message',
+  verifyToken,
   statusConnection,
   DeviceController.reactMessage
 );
 routes.post(
-  '/forward-messages',
-  //verifyToken,
+  '/api/:session/forward-messages',
+  verifyToken,
   statusConnection,
   DeviceController.forwardMessages
 );
 routes.post(
-  '/mark-unseen',
-  //verifyToken,
+  '/api/:session/mark-unseen',
+  verifyToken,
   statusConnection,
   DeviceController.markUnseenMessage
 );
 routes.post(
-  '/pin-chat',
-  //verifyToken,
+  '/api/:session/pin-chat',
+  verifyToken,
   statusConnection,
   DeviceController.pinChat
 );
 routes.post(
-  '/contact-vcard',
-  //verifyToken,
+  '/api/:session/contact-vcard',
+  verifyToken,
   statusConnection,
   DeviceController.sendContactVcard
 );
 routes.post(
-  '/send-mute',
-  //verifyToken,
+  '/api/:session/send-mute',
+  verifyToken,
   statusConnection,
   DeviceController.sendMute
 );
 routes.post(
-  '/send-seen',
-  //verifyToken,
+  '/api/:session/send-seen',
+  verifyToken,
   statusConnection,
   DeviceController.sendSeen
 );
 routes.post(
-  '/chat-state',
-  //verifyToken,
+  '/api/:session/chat-state',
+  verifyToken,
   statusConnection,
   DeviceController.setChatState
 );
 routes.post(
-  '/temporary-messages',
-  //verifyToken,
+  '/api/:session/temporary-messages',
+  verifyToken,
   statusConnection,
   DeviceController.setTemporaryMessages
 );
 routes.post(
-  '/typing',
-  //verifyToken,
+  '/api/:session/typing',
+  verifyToken,
   statusConnection,
   DeviceController.setTyping
 );
 routes.post(
-  '/recording',
-  //verifyToken,
+  '/api/:session/recording',
+  verifyToken,
   statusConnection,
   DeviceController.setRecording
 );
 routes.post(
-  '/star-message',
-  //verifyToken,
+  '/api/:session/star-message',
+  verifyToken,
   statusConnection,
   DeviceController.starMessage
 );
 routes.get(
-  '/reactions/:id',
-  //verifyToken,
+  '/api/:session/reactions/:id',
+  verifyToken,
   statusConnection,
   DeviceController.getReactions
 );
 routes.get(
-  '/votes/:id',
-  //verifyToken,
+  '/api/:session/votes/:id',
+  verifyToken,
   statusConnection,
   DeviceController.getVotes
 );
 routes.post(
-  '/reject-call',
-  //verifyToken,
+  '/api/:session/reject-call',
+  verifyToken,
   statusConnection,
   DeviceController.rejectCall
 );
 
 // Catalog
 routes.get(
-  '/get-products',
-  //verifyToken,
+  '/api/:session/get-products',
+  verifyToken,
   statusConnection,
   CatalogController.getProducts
 );
 routes.get(
-  '/get-product-by-id',
-  //verifyToken,
+  '/api/:session/get-product-by-id',
+  verifyToken,
   statusConnection,
   CatalogController.getProductById
 );
 routes.post(
-  '/add-product',
-  //verifyToken,
+  '/api/:session/add-product',
+  verifyToken,
   statusConnection,
   CatalogController.addProduct
 );
 routes.post(
-  '/edit-product',
-  //verifyToken,
+  '/api/:session/edit-product',
+  verifyToken,
   statusConnection,
   CatalogController.editProduct
 );
 routes.post(
-  '/del-products',
-  //verifyToken,
+  '/api/:session/del-products',
+  verifyToken,
   statusConnection,
   CatalogController.delProducts
 );
 routes.post(
-  '/change-product-image',
-  //verifyToken,
+  '/api/:session/change-product-image',
+  verifyToken,
   statusConnection,
   CatalogController.changeProductImage
 );
 routes.post(
-  '/add-product-image',
-  //verifyToken,
+  '/api/:session/add-product-image',
+  verifyToken,
   statusConnection,
   CatalogController.addProductImage
 );
 routes.post(
-  '/remove-product-image',
-  //verifyToken,
+  '/api/:session/remove-product-image',
+  verifyToken,
   statusConnection,
   CatalogController.removeProductImage
 );
 routes.get(
-  '/get-collections',
-  //verifyToken,
+  '/api/:session/get-collections',
+  verifyToken,
   statusConnection,
   CatalogController.getCollections
 );
 routes.post(
-  '/create-collection',
-  //verifyToken,
+  '/api/:session/create-collection',
+  verifyToken,
   statusConnection,
   CatalogController.createCollection
 );
 routes.post(
-  '/edit-collection',
-  //verifyToken,
+  '/api/:session/edit-collection',
+  verifyToken,
   statusConnection,
   CatalogController.editCollection
 );
 routes.post(
-  '/del-collection',
-  //verifyToken,
+  '/api/:session/del-collection',
+  verifyToken,
   statusConnection,
   CatalogController.deleteCollection
 );
 routes.post(
-  '/send-link-catalog',
-  //verifyToken,
+  '/api/:session/send-link-catalog',
+  verifyToken,
   statusConnection,
   CatalogController.sendLinkCatalog
 );
 routes.post(
-  '/set-product-visibility',
-  //verifyToken,
+  '/api/:session/set-product-visibility',
+  verifyToken,
   statusConnection,
   CatalogController.setProductVisibility
 );
 routes.post(
-  '/set-cart-enabled',
-  //verifyToken,
+  '/api/:session/set-cart-enabled',
+  verifyToken,
   statusConnection,
   CatalogController.updateCartEnabled
 );
 
 // Status
 routes.post(
-  '/send-text-storie',
-  //verifyToken,
+  '/api/:session/send-text-storie',
+  verifyToken,
   statusConnection,
   StatusController.sendTextStorie
 );
 routes.post(
-  '/send-image-storie',
+  '/api/:session/send-image-storie',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   StatusController.sendImageStorie
 );
 routes.post(
-  '/send-video-storie',
+  '/api/:session/send-video-storie',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   StatusController.sendVideoStorie
 );
 
 // Labels
 routes.post(
-  '/add-new-label',
-  //verifyToken,
+  '/api/:session/add-new-label',
+  verifyToken,
   statusConnection,
   LabelsController.addNewLabel
 );
 routes.post(
-  '/add-or-remove-label',
-  //verifyToken,
+  '/api/:session/add-or-remove-label',
+  verifyToken,
   statusConnection,
   LabelsController.addOrRemoveLabels
 );
 routes.get(
-  '/get-all-labels',
-  //verifyToken,
+  '/api/:session/get-all-labels',
+  verifyToken,
   statusConnection,
   LabelsController.getAllLabels
 );
 routes.put(
-  '/delete-all-labels',
-  //verifyToken,
+  '/api/:session/delete-all-labels',
+  verifyToken,
   statusConnection,
   LabelsController.deleteAllLabels
 );
 routes.put(
-  '/delete-label/:id',
-  //verifyToken,
+  '/api/:session/delete-label/:id',
+  verifyToken,
   statusConnection,
   LabelsController.deleteLabel
 );
 
 // Contact
 routes.get(
-  '/check-number-status/:phone',
-  //verifyToken,
+  '/api/:session/check-number-status/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.checkNumberStatus
 );
 routes.get(
-  '/getAllContacts',
-  //verifyToken,
+  '/api/:session/getAllContacts',
+  verifyToken,
   statusConnection,
   DeviceController.getAllContacts
 );
 routes.get(
-  '/contact/:phone',
-  //verifyToken,
+  '/api/:session/contact/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getContact
 );
 routes.get(
-  '/profile/:phone',
-  //verifyToken,
+  '/api/:session/profile/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getNumberProfile
 );
 routes.get(
-  '/profile-pic/:phone',
-  //verifyToken,
+  '/api/:session/profile-pic/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getProfilePicFromServer
 );
 routes.get(
-  '/profile-status/:phone',
-  //verifyToken,
+  '/api/:session/profile-status/:phone',
+  verifyToken,
   statusConnection,
   DeviceController.getStatus
 );
 
 // Blocklist
 routes.get(
-  '/blocklist',
-  //verifyToken,
+  '/api/:session/blocklist',
+  verifyToken,
   statusConnection,
   DeviceController.getBlockList
 );
 routes.post(
-  '/block-contact',
-  //verifyToken,
+  '/api/:session/block-contact',
+  verifyToken,
   statusConnection,
   DeviceController.blockContact
 );
 routes.post(
-  '/unblock-contact',
-  //verifyToken,
+  '/api/:session/unblock-contact',
+  verifyToken,
   statusConnection,
   DeviceController.unblockContact
 );
 
 // Device
 routes.get(
-  '/get-battery-level',
-  //verifyToken,
+  '/api/:session/get-battery-level',
+  verifyToken,
   statusConnection,
   DeviceController.getBatteryLevel
 );
 routes.get(
-  '/host-device',
-  //verifyToken,
+  '/api/:session/host-device',
+  verifyToken,
   statusConnection,
   DeviceController.getHostDevice
 );
 routes.get(
-  '/get-phone-number',
-  //verifyToken,
+  '/api/:session/get-phone-number',
+  verifyToken,
   statusConnection,
   DeviceController.getPhoneNumber
 );
 
 // Profile
 routes.post(
-  '/set-profile-pic',
+  '/api/:session/set-profile-pic',
   upload.single('file'),
-  //verifyToken,
+  verifyToken,
   statusConnection,
   DeviceController.setProfilePic
 );
 routes.post(
-  '/profile-status',
-  //verifyToken,
+  '/api/:session/profile-status',
+  verifyToken,
   statusConnection,
   DeviceController.setProfileStatus
 );
 routes.post(
-  '/change-username',
-  //verifyToken,
+  '/api/:session/change-username',
+  verifyToken,
   statusConnection,
   DeviceController.setProfileName
 );
 
 // Business
 routes.post(
-  '/edit-business-profile',
-  //verifyToken,
+  '/api/:session/edit-business-profile',
+  verifyToken,
   statusConnection,
   SessionController.editBusinessProfile
 );
 routes.get(
-  '/get-business-profiles-products',
-  //verifyToken,
+  '/api/:session/get-business-profiles-products',
+  verifyToken,
   statusConnection,
   OrderController.getBusinessProfilesProducts
 );
 routes.get(
-  '/get-order-by-messageId/:messageId',
-  //verifyToken,
+  '/api/:session/get-order-by-messageId/:messageId',
+  verifyToken,
   statusConnection,
   OrderController.getOrderbyMsg
 );
-routes.get('/backup-sessions', MiscController.backupAllSessions);
+routes.get('/api/:secretkey/backup-sessions', MiscController.backupAllSessions);
 routes.post(
-  '/restore-sessions',
+  '/api/:secretkey/restore-sessions',
   upload.single('file'),
   MiscController.restoreAllSessions
 );
 routes.get(
-  '/take-screenshot',
-  //verifyToken,
+  '/api/:session/take-screenshot',
+  verifyToken,
   MiscController.takeScreenshot
 );
-routes.post('/set-limit', MiscController.setLimit);
+routes.post('/api/:session/set-limit', MiscController.setLimit);
 
 //Communitys
 routes.post(
-  '/create-community',
-  //verifyToken,
+  '/api/:session/create-community',
+  verifyToken,
   statusConnection,
   CommunityController.createCommunity
 );
 routes.post(
-  '/deactivate-community',
-  //verifyToken,
+  '/api/:session/deactivate-community',
+  verifyToken,
   statusConnection,
   CommunityController.deactivateCommunity
 );
 routes.post(
-  '/add-community-subgroup',
-  //verifyToken,
+  '/api/:session/add-community-subgroup',
+  verifyToken,
   statusConnection,
   CommunityController.addSubgroupsCommunity
 );
 routes.post(
-  '/remove-community-subgroup',
-  //verifyToken,
+  '/api/:session/remove-community-subgroup',
+  verifyToken,
   statusConnection,
   CommunityController.removeSubgroupsCommunity
 );
 routes.post(
-  '/promote-community-participant',
-  //verifyToken,
+  '/api/:session/promote-community-participant',
+  verifyToken,
   statusConnection,
   CommunityController.promoteCommunityParticipant
 );
 routes.post(
-  '/demote-community-participant',
-  //verifyToken,
+  '/api/:session/demote-community-participant',
+  verifyToken,
   statusConnection,
   CommunityController.demoteCommunityParticipant
 );
 routes.get(
-  '/community-participants/:id',
-  //verifyToken,
+  '/api/:session/community-participants/:id',
+  verifyToken,
   statusConnection,
   CommunityController.getCommunityParticipants
 );
 
 routes.post(
-  '/newsletter',
-  //verifyToken,
+  '/api/:session/newsletter',
+  verifyToken,
   statusConnection,
   NewsletterController.createNewsletter
 );
 routes.put(
-  '/newsletter/:id',
-  //verifyToken,
+  '/api/:session/newsletter/:id',
+  verifyToken,
   statusConnection,
   NewsletterController.editNewsletter
 );
 
 routes.delete(
-  '/newsletter/:id',
-  //verifyToken,
+  '/api/:session/newsletter/:id',
+  verifyToken,
   statusConnection,
   NewsletterController.destroyNewsletter
 );
 routes.post(
-  '/mute-newsletter/:id',
-  //verifyToken,
+  '/api/:session/mute-newsletter/:id',
+  verifyToken,
   statusConnection,
   NewsletterController.muteNewsletter
 );
 
-routes.post('/chatwoot', DeviceController.chatWoot);
+routes.post('/api/:session/chatwoot', DeviceController.chatWoot);
 
 // Api Doc
 routes.use('/api-docs', swaggerUi.serve);
